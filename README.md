@@ -1,4 +1,4 @@
-# Kafka-Go-Producer
+# Kafka-Go-Consumer
 
 A minimalistic Kafka go consumer for  local and cloud hosted kafka servers.
 

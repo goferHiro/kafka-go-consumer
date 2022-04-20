@@ -7,9 +7,12 @@ import (
 	"fmt"
 	"log"
 	"time"
+
 	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/sasl/plain"
 )
+
+var ReadChannel = make(chan []byte,100000) //unbuffereed channel needs a receiver as soon as msg is send
 
 func newReader(url, topic string, dialer *kafka.Dialer) *kafka.Reader {
 
@@ -50,9 +53,11 @@ func read(url, topic string, dialer *kafka.Dialer) {
 	for {
 		msg, err := reader.ReadMessage(context.Background())
 		if try(err, nil) {
-			log.Printf("rec%d:\t%s\n", msg.Value,msg.Value)
+			log.Printf("rec%d:\t%s\n", msg.Value, msg.Value)
+			ReadChannel <- msg.Value
 		}
 	}
+	// close(ReadChannel)
 }
 
 func StartKafka(topic, cGID string) {
@@ -86,4 +91,3 @@ func main() {
 	runtime := 10 * time.Minute
 	time.Sleep(runtime)
 }
-

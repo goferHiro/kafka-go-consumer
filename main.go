@@ -5,6 +5,7 @@ import (
 	appKafka "mykafka/kafka"
 	webSocket "mykafka/websocket"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -27,7 +28,7 @@ func main() {
 		}
 	}()
 
-	topic := "kafka-go"
+	topic :=os.Getenv("topic")
 	cGID := "g1"
 	fmt.Println("Consumer is being started!")
 	defer fmt.Println("Consumer is stopped!")

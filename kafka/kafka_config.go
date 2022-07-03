@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/segmentio/kafka-go"
@@ -47,7 +48,6 @@ func newDialer(clientID, username, password string) *kafka.Dialer {
 }
 
 func read(url, topic string, dialer *kafka.Dialer) {
-
 	reader := newReader(url, topic, dialer)
 	defer reader.Close()
 	for {
@@ -62,12 +62,11 @@ func read(url, topic string, dialer *kafka.Dialer) {
 
 func StartKafka(topic, cGID string) {
 
-	username := "YGNDSDHF6KGOMJQX"
-	password := "eWt0ut+fpGlffp+5leVRlHDAco87z10WhwUnq9uUmVgsUDY3MbQnFCQ++2j/reiq"
+	username := os.Getenv("username")
+	password :=os.Getenv("pass")
+	url :=os.Getenv("bootstrap_servers")
 
 	dialer := newDialer(cGID, username, password)
-	url := "pkc-ymrq7.us-east-2.aws.confluent.cloud:9092"
-
 	read(url, topic, dialer)
 }
 
@@ -83,8 +82,8 @@ func try(err error, errorHandler func(s string)) bool {
 }
 
 func main() {
-	topic := "kafka-go"
-	cGID := "g1"
+	topic := os.Getenv("topic")
+	cGID := "g2"
 	fmt.Println("Consumer is being started!")
 	defer fmt.Println("Consumer is stopped!")
 	StartKafka(topic, cGID)
